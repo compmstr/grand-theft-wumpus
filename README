@@ -1,13 +1,7 @@
 # grand-theft-wumpus
 
-FIXME: write description
-
-## Usage
-
-FIXME: write
+Grand Theft wumpus inspired game from Land Of Lisp
 
 ## License
 
-Copyright (C) 2013 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed as Public Domain
