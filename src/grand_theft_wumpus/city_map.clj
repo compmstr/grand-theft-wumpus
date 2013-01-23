@@ -31,6 +31,7 @@
                        (map set)
                        set
                        (apply vector))]
+    ))
 
 (defn connect-islands
   [locs])
