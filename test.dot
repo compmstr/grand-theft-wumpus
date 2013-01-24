@@ -19,3 +19,10 @@ digraph B {
  main -> printf;
  execute -> compare;
 }
+
+digraph C {
+ garden;
+ living_room;
+ garden -> {living_room};
+ living_room -> {garden};
+}

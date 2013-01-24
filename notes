@@ -31,3 +31,9 @@ dot -Tpng -O <file.dot>
 
 Temporary files:
   (java.io.File/createTempFile "prefix", "suffix")
+  (System/getProperty "java.io.tmpdir")
+
+Swing ImageIcon to display png file
+
+Create a swing interface with the map displayed, and buttons for each possible move
+  Have a checkbox for when we're going after the wumpus
