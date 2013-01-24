@@ -1,4 +1,4 @@
 (ns gtw.core
-  (:require [grand-theft-wumpus.city-map :as city-map]
-            [grand-theft-wumpus.player :as player]))
+  (:require [gtw.city-map :as city-map]
+            [gtw.player :as player]))
 

@@ -1,5 +1,5 @@
-(ns grand-theft-wumpus.test.core
-  (:use [grand-theft-wumpus.core])
+(ns gtw.test.core
+  (:use [gtw.core])
   (:use [clojure.test]))
 
 (deftest replace-me ;; FIXME: write

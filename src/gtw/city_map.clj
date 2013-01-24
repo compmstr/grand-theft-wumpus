@@ -1,5 +1,5 @@
 (ns gtw.city-map
-  (require [grand-theft-wumpus.config :as config]))
+  (require [gtw.config :as config]))
 
 (defn rand-set
   [num max]
