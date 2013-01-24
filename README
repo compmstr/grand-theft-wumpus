@@ -2,6 +2,18 @@
 
 Grand Theft wumpus inspired game from Land Of Lisp
 
+After a failed heist, your partner in crime, the wumpus has left you in congestion city,
+but not after you tagged him with a shot from your handgun.
+You now have to find him in the city full of cop roadblocks and a rival gang
+of glowworms.
+
+When you are within 2 blocks of the wumpus, you will see blood
+		 You only have one shot to shoot him before he shoots you
+When you are within 1 block of a glowworm team (there are 3), you will see blinking lights
+		 Glow worms will kidnap you, beat you up, rob you, and drop you in some random part of town
+When you are next to a roadblock, you will hear sirens
+		 game over if the cops find you
+
 ## License
 
 Distributed as Public Domain

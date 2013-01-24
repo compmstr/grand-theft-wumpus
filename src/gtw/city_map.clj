@@ -1,22 +1,27 @@
 (ns gtw.city-map
-  (require [gtw.config :as config]))
+  (:require [gtw.config :as config])
+  (:use gtw.util))
 
-(defn rand-set
-  [num max]
-  (if (< max num)
-    (throw (IllegalArgumentException. "Can't create a set with more items than available numbers")))
-  (loop [rset (set (take num (repeatedly #(rand-int max))))]
-    (if (= (count rset) num)
-      (shuffle rset)
-      (recur (set (concat
-                   rset
-                   (take (- num (count rset)) (repeatedly #(rand-int max)))))))))
+(declare get-within-one
+         generate-map
+         id->loc
+         ids->locs
+         get-free-locs)
 
-(defn random-loc
+(defn id->loc
+  [locs id]
+  (nth locs id))
+(defn ids->locs
+"Pass in a seq of ids, and a map, and this will return the
+maps of data for those ids"
+  [locs ids]
+  (map (partial id->loc locs) ids))
+
+(defn- random-loc
   []
   (rand-int config/city-locs))
 
-(defn add-worms
+(defn- add-worms
   [locs]
   (loop [worm-locs (rand-set config/num-worms config/city-locs)
          locs locs]
@@ -25,9 +30,9 @@
       (recur (rest worm-locs)
              (update-in locs
                         [(first worm-locs) :worm]
-                        (fn [_] true))))))
+                        (constantly true))))))
 
-(defn get-city-roads
+(defn- get-city-roads
   "Returns a set of pair sets of connected locs"
   [locs]
   (set
@@ -39,7 +44,7 @@
             (:connections (nth locs loc))))
          (range config/city-locs)))))
 
-(defn add-cop-roadblock
+(defn- add-cop-roadblock
   "Adds a cop roadblock on the connection between two indexed locs"
   [locs pair]
   (update-in
@@ -48,7 +53,7 @@
    [(second pair) :cops]
    conj (first pair)))
 
-(defn add-cops
+(defn- add-cops
   [locs]
   (let [roads (apply vector (get-city-roads locs))
         num-roads (count roads)]
@@ -58,14 +63,22 @@
                 locs))
             locs roads)))
 
-(defn add-road-pair
+(defn- add-wumpus
+  "Adds the wumpus to an unoccupied location"
+  [locs]
+  (let [free-locs (get-free-locs locs)
+        wumpus-loc (rand-nth free-locs)]
+    (update-in locs [(:id wumpus-loc) :wumpus]
+               (constantly true))))
+
+(defn- add-road-pair
   [locs pair]
   (update-in
    (update-in locs [(first pair) :connections]
               conj (second pair))
    [(second pair) :connections]
    conj (first pair)))
-(defn add-roads
+(defn- add-roads
   [locs]
   (loop [loc-pairs (->> (take config/city-roads (repeatedly #(rand-set 2 config/city-locs)))
                        (map set)
@@ -77,7 +90,7 @@
       (recur (rest loc-pairs)
              (add-road-pair locs (first loc-pairs))))))
 
-(defn get-connected
+(defn- get-connected
   "Takes in all locs, and the index to start at"
   [locs starting]
   (loop [connections (set (conj (:connections (nth locs starting))
@@ -91,8 +104,7 @@
                (conj visited (first to-visit))
                (concat (rest to-visit)
                        (filter #(not (contains? connections %)) new-conns)))))))
-            
-(defn find-islands
+(defn- find-islands
   [locs]
   (loop [to-check (range config/city-locs)
          islands []]
@@ -103,7 +115,7 @@
          (remove #(contains? new-island %) to-check)
          (conj islands new-island))))))
 
-(defn connect-islands
+(defn- connect-islands
   "Connect any disjoined sets of locations in the city"
   [locs]
   (let [islands (find-islands locs)
@@ -119,13 +131,13 @@
           [(rand-nth first-island)
            (rand-nth (apply vector (first islands)))]))))))
 
-(defn base-city-loc
+(defn- base-city-loc
+  "Generates a base city loc"
   [id]
   {:id id
    :connections []
-   :worm nil
    :cops []})
-(defn base-city
+(defn- base-city
   []
   (apply vector
          (map base-city-loc (range config/city-locs))))
@@ -137,8 +149,21 @@
       (add-roads)
       (connect-islands)
       (add-cops)
+      (add-wumpus)
       ))
 
-(def city-map
-  "Map of congestion city, a vector of city nodes"
-  (atom []))
+(defn get-free-locs
+  "Returns a list of locations with no worms, wumpuses, or cops"
+  [locs]
+  (->> locs
+       (remove :worm)
+       (remove :wumpus)
+       (filter #(empty? (:cops %)))))
+
+(defn get-within-one
+  "Returns set of locs within one hop of starting"
+  [locs starting]
+  (set
+   (apply concat
+          (map #(:connections (nth locs %))
+               (set (conj (:connections (nth locs starting)) starting))))))

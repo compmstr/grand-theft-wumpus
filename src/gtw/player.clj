@@ -1,7 +1,25 @@
-(ns gtw.player)
+(ns gtw.player
+  (:require [gtw.city-map :as city-map]))
+
+(declare go-to
+         walk-to
+         charge-to)
 
 (def player
   "Player Data"
   (atom {:loc nil
          :inventory []
          :visited []}))
+
+(defn start-player
+  [locs]
+  (go-to locs (rand-nth
+               (map :id
+                    (city-map/get-free-locs locs)))))
+
+(defn go-to
+  [locs loc]
+  (swap! player
+         #(-> %
+              (update-in [:loc] (constantly loc))
+              (update-in [:visited] (fn [_] (conj (:visited %) loc))))))
