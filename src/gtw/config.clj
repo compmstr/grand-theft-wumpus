@@ -1,4 +1,4 @@
-(ns grand-theft-wumpus.config)
+(ns gtw.config)
 
 (def city-locs 30)
 (def city-roads 45)

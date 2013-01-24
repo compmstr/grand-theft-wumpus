@@ -1,4 +1,4 @@
-(ns grand-theft-wumpus.player)
+(ns gtw.player)
 
 (def player
   "Player Data"

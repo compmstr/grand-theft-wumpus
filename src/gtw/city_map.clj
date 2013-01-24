@@ -1,4 +1,4 @@
-(ns grand-theft-wumpus.city-map
+(ns gtw.city-map
   (require [grand-theft-wumpus.config :as config]))
 
 (defn rand-set
