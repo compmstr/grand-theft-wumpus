@@ -21,6 +21,7 @@ digraph B {
 }
 
 digraph C {
+ concentrate=true /* combine unlabeled bi-directional edges */
  garden;
  living_room;
  garden -> {living_room};
