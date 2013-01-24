@@ -1,0 +1,19 @@
+digraph A {
+  LIVING_ROOM[label="Living room"];
+  GARDEN[label="Garden"];
+  ATTIC[label="Attic"];
+
+  LIVING_ROOM->GARDEN[label="West Door"];
+  LIVING_ROOM->ATTIC[label="Up Ladder"];
+  GARDEN->LIVING_ROOM[label="East Door"];
+  ATTIC->LIVING_ROOM[label="Down Ladder"];
+}
+
+digraph B {
+ main -> parse -> execute;
+ main -> {init; cleanup}
+ execute -> { make_string; printf }
+ init -> make_string;
+ main -> printf;
+ execute -> compare;
+}

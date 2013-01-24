@@ -1,5 +1,6 @@
 /pom.xml
 *jar
+*.png
 /lib
 /classes
 /native

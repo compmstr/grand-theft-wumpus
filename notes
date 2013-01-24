@@ -1,0 +1,23 @@
+Digraph dot files:
+  digraph{ statements }
+  Nodes:
+    NAME [label="foo"];
+    ex:
+    GARDEN [label="Garden"];
+    main
+    parse [shape="box"];
+  Paths:
+    NAME1 -> NAME2 [label="Path"];
+    ex:
+    LIVING_ROOM -> GARDEN [label="West Door"];
+    main -> parse
+    parse -> execute ["weight=8", label="10 times"]
+    execute -> { make_string; printf }
+
+node shapes: 
+  ellipse, box, circle, record, plaintext
+path styles:
+  dotted, bold
+color can be set using a string of three numbers between 0 and 1, with no leading 0
+
+dot -Tpng -O <file.dot>
