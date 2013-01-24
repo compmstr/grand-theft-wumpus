@@ -14,6 +14,13 @@ Digraph dot files:
     parse -> execute ["weight=8", label="10 times"]
     execute -> { make_string; printf }
 
+Can set default node attrs with 'node [attrs]'
+Can set default edge attrs with 'edge [attrs]'
+Style "" sets default
+node styles:
+  solid, dashed, dotted, bold, rounded, diagonals, filled
+edge styles:
+  solid, dashed, dotted, bold
 node shapes: 
   ellipse, box, circle, record, plaintext
 path styles:
@@ -21,3 +28,6 @@ path styles:
 color can be set using a string of three numbers between 0 and 1, with no leading 0
 
 dot -Tpng -O <file.dot>
+
+Temporary files:
+  (java.io.File/createTempFile "prefix", "suffix")

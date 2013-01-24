@@ -10,6 +10,8 @@ digraph A {
 }
 
 digraph B {
+ node [shape="box"]
+ edge [style=""]
  main -> parse -> execute;
  main -> {init; cleanup}
  execute -> { make_string; printf }
