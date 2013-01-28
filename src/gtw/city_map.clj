@@ -168,11 +168,23 @@ maps of data for those ids"
           (map #(:connections (nth locs %))
                (set (conj (:connections (nth locs starting)) starting))))))
 
+(defn- cop-labelled-connections
+  "Returns the connections for a loc with the cop connections labeled as such,
+for use with map-to-graph"
+  [loc]
+  (let [cop-set (set (:cops loc))]
+    (map #(if (contains? cop-set %)
+            {:label %
+             :attrs {:label "Cops"}}
+            %)
+         (:connections loc))))
 (defn map-to-graph
   [locs]
   (for [loc locs]
     {:label (:id loc)
      :attrs {:label (str (:id loc)
                          (when (:worm loc)
-                           "\\nWorm!"))}
-     :connections (:connections loc)}))
+                           "\\nWorm!")
+                         (when-not (empty? (:cops loc))
+                           "\\nSirens"))}
+     :connections (cop-labelled-connections loc)}))

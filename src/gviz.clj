@@ -84,9 +84,13 @@
    (str
     (let [opts-map (apply hash-map opts)]
       ;;TODO: fix this -- outputs [(first char of opt) = (second char of op)
-      (println "opts: " opts-map)
-      (apply str (for [opt opts] [(first opt) "=" (second opt) "\n"])))
-    "\n"
+      (println "opt-map: " opts-map)
+      (apply str (for [opt opts-map] (str
+                                      "  "
+                                      (node-name (first opt))
+                                      "="
+                                      (node-name (second opt))
+                                      "\n"))))
     (apply str (map #(node (:label %)
                            (:attrs %)) graph))
     (apply str (map #(edges (:label %)
@@ -105,7 +109,8 @@
     :connections [{:label :garden
                    :attrs {:label "West Door"}}
                   {:label :attic
-                   :attrs {:label "Up Ladder"}}]}
+                   :attrs {:label "Up Ladder"}}
+                  :secret]}
    {:label :attic
     :connections [{:label :living-room
                    :attrs {:label "Down Ladder"}}]}])
