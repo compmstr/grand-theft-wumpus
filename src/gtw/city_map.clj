@@ -28,9 +28,9 @@ maps of data for those ids"
     (if (empty? worm-locs)
       locs
       (recur (rest worm-locs)
-             (update-in locs
+             (assoc-in locs
                         [(first worm-locs) :worm]
-                        (constantly true))))))
+                        true)))))
 
 (defn- get-city-roads
   "Returns a set of pair sets of connected locs"
@@ -68,8 +68,8 @@ maps of data for those ids"
   [locs]
   (let [free-locs (get-free-locs locs)
         wumpus-loc (rand-nth free-locs)]
-    (update-in locs [(:id wumpus-loc) :wumpus]
-               (constantly true))))
+    (assoc-in locs [(:id wumpus-loc) :wumpus]
+               true)))
 
 (defn- add-road-pair
   [locs pair]

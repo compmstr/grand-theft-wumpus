@@ -21,5 +21,5 @@
   [locs loc]
   (swap! player
          #(-> %
-              (update-in [:loc] (constantly loc))
+              (assoc-in [:loc] loc)
               (update-in [:visited] (fn [_] (conj (:visited %) loc))))))
