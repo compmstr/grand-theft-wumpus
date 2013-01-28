@@ -83,8 +83,6 @@
   (digraph
    (str
     (let [opts-map (apply hash-map opts)]
-      ;;TODO: fix this -- outputs [(first char of opt) = (second char of op)
-      (println "opt-map: " opts-map)
       (apply str (for [opt opts-map] (str
                                       "  "
                                       (node-name (first opt))

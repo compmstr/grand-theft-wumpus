@@ -178,13 +178,24 @@ for use with map-to-graph"
              :attrs {:label "Cops"}}
             %)
          (:connections loc))))
-(defn map-to-graph
+
+(defn- worm-close?
+  [locs loc]
+  (not
+   (empty?
+    (filter :worm
+            (map #(nth locs %)
+                 (:connections loc))))))
+
+(defn map->graph
   [locs]
   (for [loc locs]
     {:label (:id loc)
      :attrs {:label (str (:id loc)
                          (when (:worm loc)
                            "\\nWorm!")
+                         (when (worm-close? locs loc)
+                           "\\nGlow")
                          (when-not (empty? (:cops loc))
                            "\\nSirens"))}
      :connections (cop-labelled-connections loc)}))

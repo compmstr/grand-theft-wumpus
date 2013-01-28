@@ -3,3 +3,8 @@
             [gtw.player :as player]
             gviz))
 
+;;Example of displaying map
+;;(spit "map.dot"
+      ;;(-> (city-map/generate-map)
+          ;;(city-map/map->graph)
+          ;;(gviz/graph->dot :concentrate "true")))
