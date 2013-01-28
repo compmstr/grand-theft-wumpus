@@ -79,14 +79,19 @@
   :connections (list of labels that this node connects to)
     if a connection entry is a map, it needs :label and (optional) :attrs
   Returns the text content of a graphviz .dot file"
-  [graph]
+  [graph & opts]
   (digraph
    (str
+    (let [opts-map (apply hash-map opts)]
+      ;;TODO: fix this -- outputs [(first char of opt) = (second char of op)
+      (println "opts: " opts-map)
+      (apply str (for [opt opts] [(first opt) "=" (second opt) "\n"])))
+    "\n"
     (apply str (map #(node (:label %)
                            (:attrs %)) graph))
     (apply str (map #(edges (:label %)
                             (:connections %)
-                            (:attrs %)) graph)))))
+                            (:edge-attrs %)) graph)))))
 
 (def test-graph
   [{:label :node :connections []

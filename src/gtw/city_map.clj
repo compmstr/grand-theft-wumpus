@@ -167,3 +167,12 @@ maps of data for those ids"
    (apply concat
           (map #(:connections (nth locs %))
                (set (conj (:connections (nth locs starting)) starting))))))
+
+(defn map-to-graph
+  [locs]
+  (for [loc locs]
+    {:label (:id loc)
+     :attrs {:label (str (:id loc)
+                         (when (:worm loc)
+                           "\\nWorm!"))}
+     :connections (:connections loc)}))
