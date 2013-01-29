@@ -78,13 +78,13 @@
 
 (defn- test-click-fn
   [num]
-  (println (str "Going to: " num "\n"
-                (if (charge?)
-                  "Charge!!!"))))
+  (println (str "Going to: " num
+                (when (charge?)
+                  "\nCharge!!!"))))
 (defn test-ui
   []
   (start-ui)
-  (set-buttons {2 #(println "Going to 2")
-                5 #(println "Going to 5")
-                3 #(println "Going to 3")
-                4 #(println "Going to 4")}))
+  (set-buttons {2 (partial test-click-fn 2)
+                3 (partial test-click-fn 3)
+                5 (partial test-click-fn 5)
+                4 (partial test-click-fn 4)}))

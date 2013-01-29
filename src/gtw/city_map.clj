@@ -2,7 +2,7 @@
   (:require [gtw.config :as config])
   (:use gtw.util))
 
-(declare get-within-one
+(declare get-within-two
          generate-map
          id->loc
          ids->locs
@@ -152,21 +152,40 @@ maps of data for those ids"
       (add-wumpus)
       ))
 
-(defn get-free-locs
-  "Returns a list of locations with no worms, wumpuses, or cops"
-  [locs]
-  (->> locs
-       (remove :worm)
-       (remove :wumpus)
-       (filter #(empty? (:cops %)))))
+(defn- worm-close?
+  [locs loc]
+  (let [loc (if (map? loc) (:id loc) loc)]
+    (not
+     (empty?
+      (filter :worm
+              (map #(nth locs %)
+                   (:connections loc)))))))
 
-(defn get-within-one
-  "Returns set of locs within one hop of starting"
+(defn get-within-two
+  "Returns set of locs within two hops of starting"
   [locs starting]
   (set
    (apply concat
           (map #(:connections (nth locs %))
                (set (conj (:connections (nth locs starting)) starting))))))
+
+(defn wumpus-close?
+  [locs loc]
+  (let [loc (if (map? loc) (:id loc) loc)]
+    (not (empty?
+          (filter :wumpus
+                  (map #(nth locs %)
+                       (get-within-two locs loc)))))))
+
+(defn get-free-locs
+  "Returns a list of locations with no worms, wumpuses, or cops"
+  [locs]
+  (->> locs
+       (remove (partial worm-close? locs))
+       (remove (partial wumpus-close? locs))
+       (remove :worm)
+       (remove :wumpus)
+       (filter #(empty? (:cops %)))))
 
 (defn- cop-labelled-connections
   "Returns the connections for a loc with the cop connections labeled as such,
@@ -179,19 +198,13 @@ for use with map-to-graph"
             %)
          (:connections loc))))
 
-(defn- worm-close?
-  [locs loc]
-  (not
-   (empty?
-    (filter :worm
-            (map #(nth locs %)
-                 (:connections loc))))))
-
 (defn map->graph
   [locs]
   (for [loc locs]
     {:label (:id loc)
      :attrs {:label (str (:id loc)
+                         (when (wumpus-close? locs loc)
+                           "\\nBlood!")
                          (when (:worm loc)
                            "\\nWorm!")
                          (when (worm-close? locs loc)
@@ -201,13 +214,16 @@ for use with map-to-graph"
      :connections (cop-labelled-connections loc)}))
 
 (defn visited->graph
-  "Generates a graph for the currently visible locations"
-  [locs visited cur]
+  "Generates a graph for the currently visible locations
+    Expects a map with :visited and :loc keys"
+  [locs {visited :visited cur :loc}]
   (for [loc-id visited :let [loc (nth locs loc-id)]]
     {:label loc-id
      :attrs {:label (str loc-id
                          (when (= cur loc-id)
                            "\\n*You*")
+                         (when (wumpus-close? locs loc)
+                           "\\nBlood!")
                          (when (:worm loc)
                            "\\nWorm!")
                          (when (worm-close? locs loc)
