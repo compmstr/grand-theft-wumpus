@@ -78,7 +78,9 @@
   :label(name of node)
   :connections (list of labels that this node connects to)
     if a connection entry is a map, it needs :label and (optional) :attrs
-  Returns the text content of a graphviz .dot file"
+  Returns the text content of a graphviz .dot file
+  opts - list of key/value pairs for digraph options
+    ex: :concentrate \"true\" combines lines where applicable"
   [graph & opts]
   (digraph
    (str
