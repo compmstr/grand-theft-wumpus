@@ -28,6 +28,7 @@ path styles:
 color can be set using a string of three numbers between 0 and 1, with no leading 0
 
 dot -Tpng -O <file.dot>
+fdp better for undirected graphs, like this
 
 Temporary files:
   (java.io.File/createTempFile "prefix", "suffix")

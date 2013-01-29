@@ -5,15 +5,20 @@
             gviz))
 
 (defonce game-map (city-map/generate-map))
-(defn game-gviz-string
+(defn game-dot-string
   []
   (gviz/graph->dot
    (city-map/visited->graph game-map @player/player)
-   :concentrate "true"))
+   :concentrate "true"
+   :size "4,3"
+   :dpi "200"))
 
 (player/start-player game-map)
-(print (game-gviz-string))
+(print (game-dot-string))
 ;;(player/go-to game-map <new-loc>)
+
+;;(gviz/render-dot-string (game-dot-string) "game-map.png")
+;; then update the image on the UI
 
 ;;Example of displaying map
 ;;(spit "map.dot"

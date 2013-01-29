@@ -1,5 +1,6 @@
 (ns gviz
-  (:require [clojure.string :as string :only [replace]]))
+  (:require [clojure.string :as string :only [replace]]
+            [clojure.java.shell :as sh]))
 
 (defn- digraph
   [contents]
@@ -96,6 +97,22 @@
     (apply str (map #(edges (:label %)
                             (:connections %)
                             (:edge-attrs %)) graph)))))
+
+(defn render-dot-string
+  "Render a dot format string, to avoid temporary dot files"
+  [source png-file]
+  (sh/sh "fdp" "-Tpng" (str "-o" png-file) :in source))
+(defn render-dot-file
+  "Render a dotfile to a png"
+  ([dot-file]
+     (let [ext-idx (.lastIndexOf dot-file ".dot")]
+       (render-dot-file dot-file (str (if (= -1 ext-idx)
+                                     dot-file
+                                     (subs dot-file 0 ext-idx))
+                                   ".png"))))
+  ([dot-file png-file]
+     (println (format "Rendering %s into %s" dot-file png-file))
+     (sh/sh "fdp" "-Tpng" (str "-o" png-file) dot-file)))
 
 (def test-graph
   [{:label :node :connections []

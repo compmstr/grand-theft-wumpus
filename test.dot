@@ -29,6 +29,8 @@ digraph C {
 }
 
 digraph map {
+  size="4,3"
+  dpi="200"
 	concentrate=true
 	node [shape="box"];
 	secret;

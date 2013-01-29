@@ -3,9 +3,7 @@
             [gtw.ui :as ui]))
 
 (defonce player
-  (atom {:loc nil
-         :inventory []
-         :visited []}))
+  (atom {}))
 
 (defn move-player
   [loc]
@@ -20,6 +18,9 @@
   (move-player (:id (rand-nth (city-map/get-free-locs locs)))))
 (defn start-player
   [locs]
+  (reset! player {:loc nil
+                  :inventory []
+                  :visited []})
   (move-player-random locs))
 
 (defn handle-cops
