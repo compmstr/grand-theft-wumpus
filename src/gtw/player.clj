@@ -41,7 +41,7 @@
 (defn go-to
   "Moves player to new location. Returns either the player map, or true for win, nil for lose"
   [locs loc]
-  (let [new-loc (nth locs loc)]
+  (let [new-loc (city-map/id->loc locs loc)]
     (cond
      (:worm new-loc)
      (handle-worm locs),

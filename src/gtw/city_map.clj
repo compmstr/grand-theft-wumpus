@@ -41,7 +41,7 @@ maps of data for those ids"
            (map
             (fn [conn]
               (set [loc conn]))
-            (:connections (nth locs loc))))
+            (:connections (id->loc locs loc))))
          (range config/city-locs)))))
 
 (defn- add-cop-roadblock
@@ -93,13 +93,13 @@ maps of data for those ids"
 (defn- get-connected
   "Takes in all locs, and the index to start at"
   [locs starting]
-  (loop [connections (set (conj (:connections (nth locs starting))
+  (loop [connections (set (conj (:connections (id->loc locs starting))
                                 starting))
          visited [starting]
-         to-visit (:connections (nth locs starting))]
+         to-visit (:connections (id->loc locs starting))]
     (if (empty? to-visit)
       connections
-      (let [new-conns (:connections (nth locs (first to-visit)))]
+      (let [new-conns (:connections (id->loc locs (first to-visit)))]
         (recur (set (concat new-conns connections))
                (conj visited (first to-visit))
                (concat (rest to-visit)
@@ -158,24 +158,22 @@ maps of data for those ids"
     (not
      (empty?
       (filter :worm
-              (map #(nth locs %)
-                   (:connections loc)))))))
+              (ids->locs locs (:connections loc)))))))
 
 (defn get-within-two
   "Returns set of locs within two hops of starting"
   [locs starting]
   (set
    (apply concat
-          (map #(:connections (nth locs %))
-               (set (conj (:connections (nth locs starting)) starting))))))
+          (map #(:connections (id->loc locs %))
+               (set (conj (:connections (id->loc locs starting)) starting))))))
 
 (defn wumpus-close?
   [locs loc]
   (let [loc (if (map? loc) (:id loc) loc)]
     (not (empty?
           (filter :wumpus
-                  (map #(nth locs %)
-                       (get-within-two locs loc)))))))
+                  (ids->locs locs (get-within-two locs loc)))))))
 
 (defn get-free-locs
   "Returns a list of locations with no worms, wumpuses, or cops"
@@ -219,7 +217,7 @@ for use with map-to-graph"
   "Generates a graph for the currently visible locations
     Expects a map with :visited and :loc keys"
   [locs {visited :visited cur :loc}]
-  (for [loc-id visited :let [loc (nth locs loc-id)]]
+  (for [loc-id visited :let [loc (id->loc locs loc-id)]]
     {:label loc-id
      :attrs {:label (str loc-id
                          (when (= cur loc-id)

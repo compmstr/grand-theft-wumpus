@@ -15,6 +15,13 @@
 
 (player/start-player game-map)
 (print (game-dot-string))
+(ui/start-ui)
+(gviz/render-dot-string (game-dot-string) "/tmp/gtw.game-map.png")
+;;Delete the map file when we're done with the game
+(.deleteOnExit (java.io.File. "/tmp/gtw.game-map.png"))
+
+(ui/set-img "/tmp/gtw.game-map.png")
+
 ;;(player/go-to game-map <new-loc>)
 
 ;;(gviz/render-dot-string (game-dot-string) "game-map.png")
