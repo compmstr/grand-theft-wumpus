@@ -86,9 +86,9 @@
       (apply str (for [opt opts-map] (str
                                       "  "
                                       (node-name (first opt))
-                                      "="
+                                      "=\""
                                       (node-name (second opt))
-                                      "\n"))))
+                                      "\"\n"))))
     (apply str (map #(node (:label %)
                            (:attrs %)) graph))
     (apply str (map #(edges (:label %)

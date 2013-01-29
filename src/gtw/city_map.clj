@@ -199,3 +199,19 @@ for use with map-to-graph"
                          (when-not (empty? (:cops loc))
                            "\\nSirens"))}
      :connections (cop-labelled-connections loc)}))
+
+(defn visited->graph
+  "Generates a graph for the currently visible locations"
+  [locs visited cur]
+  (for [loc-id visited :let [loc (nth locs loc-id)]]
+    {:label loc-id
+     :attrs {:label (str loc-id
+                         (when (= cur loc-id)
+                           "\\n*You*")
+                         (when (:worm loc)
+                           "\\nWorm!")
+                         (when (worm-close? locs loc)
+                           "\\nGlow")
+                         (when-not (empty? (:cops loc))
+                           "\\nSirens"))}
+     :connections (:connections loc)}))
