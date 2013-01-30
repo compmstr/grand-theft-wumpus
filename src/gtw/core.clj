@@ -13,14 +13,32 @@
    :size "4,3"
    :dpi "200"))
 
-(player/start-player game-map)
-(print (game-dot-string))
-(ui/start-ui)
-(gviz/render-dot-string (game-dot-string) "/tmp/gtw.game-map.png")
-;;Delete the map file when we're done with the game
-(.deleteOnExit (java.io.File. "/tmp/gtw.game-map.png"))
+(declare game-move)
+(defn game-display
+  [new-loc]
+  (gviz/render-dot-string (game-dot-string) "/tmp/gtw.game-map.png")
+  (ui/set-img "/tmp/gtw.game-map.png")
+  (ui/set-buttons (apply hash-map
+                         (apply concat
+                                (for [conn
+                                      (:connections
+                                       (city-map/id->loc game-map new-loc))]
+                                  [conn #(game-move conn)])))))
+(defn game-move
+  [new-loc]
+  (player/go-to game-map new-loc)
+  (game-display (:loc @player/player)))
 
-(ui/set-img "/tmp/gtw.game-map.png")
+(player/start-player game-map)
+(ui/start-ui)
+(game-display (:loc @player/player))
+(.deleteOnExit (java.io.File. "/tmp/gtw.game-map.png"))
+;;(print (game-dot-string))
+;;(ui/start-ui)
+;;(gviz/render-dot-string (game-dot-string) "/tmp/gtw.game-map.png")
+;;Delete the map file when we're done with the game
+
+;;(ui/set-img "/tmp/gtw.game-map.png")
 
 ;;(player/go-to game-map <new-loc>)
 

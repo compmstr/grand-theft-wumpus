@@ -25,18 +25,24 @@
 
 (defn handle-cops
   []
-  (println "Caught by the cops!")
+  (ui/set-message "Caught by the cops!")
   nil)
 (defn handle-worm
   [locs]
-  (println "Found a worm gang")
+  (ui/set-message "Found a worm gang")
   (move-player-random locs))
 (defn handle-wumpus
   []
-  (println "Found the wumpus!!!")
+  (ui/set-message "Found the wumpus!!!")
   (if (ui/charge?)
-    true
-    nil))
+    (do
+      (ui/set-message
+       "You Killed your ex-partner, the wumpus!")
+      true)
+    (do
+      (ui/set-message
+       "You run into the wumpus, and he pumps you full of lead...")
+      nil)))
 
 (defn go-to
   "Moves player to new location. Returns either the player map, or true for win, nil for lose"

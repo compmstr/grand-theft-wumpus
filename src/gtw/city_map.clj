@@ -154,7 +154,7 @@ maps of data for those ids"
 
 (defn- worm-close?
   [locs loc]
-  (let [loc (if (map? loc) (:id loc) loc)]
+  (let [loc (if (map? loc) loc (id->loc locs loc))]
     (not
      (empty?
       (filter :worm

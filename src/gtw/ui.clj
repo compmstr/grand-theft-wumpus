@@ -20,6 +20,7 @@
       img (ImageIcon.)
       label (JLabel. img)
       map-pane (JScrollPane. label)
+      msg-line (JLabel. "Messages")
       charge-check (JCheckBox. "Charge")
       option-panel (JPanel.)
       nav-panel (JPanel.)]
@@ -48,6 +49,13 @@
                            (mouseExited [_] nil)
                            (mousePressed [_] nil)
                            (mouseReleased [_] nil)))))
+  (defn set-message
+    [new-msg]
+    (on-evt-thread
+     (doto msg-line
+       (.setText new-msg)
+       (.revalidate)
+       (.repaint))))
   (defn set-buttons
     "Takes in a map of label: callback kv pairs, and creates buttons for that"
     [button-info]
@@ -69,6 +77,7 @@
     (doto frame
       (.add map-pane BorderLayout/CENTER)
       (.add (doto (JPanel.)
+              (.add msg-line BorderLayout/NORTH)
               (.add option-panel BorderLayout/WEST)
               (.add nav-panel BorderLayout/EAST))
             BorderLayout/SOUTH)
