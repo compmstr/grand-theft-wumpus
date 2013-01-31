@@ -219,7 +219,10 @@ for use with map-to-graph"
   [locs {visited :visited cur :loc}]
   (for [loc-id visited :let [loc (id->loc locs loc-id)]]
     {:label loc-id
-     :attrs {:label (str loc-id
+     :attrs {:color (if (= cur loc-id)
+                      "#00FF00"
+                      "#000000")
+             :label (str "[" loc-id "]"
                          (when (= cur loc-id)
                            "\\n*You*")
                          (when (wumpus-close? locs loc)

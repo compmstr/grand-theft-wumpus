@@ -3,7 +3,7 @@
            gviz)
   (import [javax.swing
            JScrollPane JLabel JPanel ImageIcon JButton JFrame SwingUtilities
-           JCheckBox]
+           JCheckBox JOptionPane]
           [java.awt BorderLayout]
           [java.awt.event MouseListener]
           [java.io File]
@@ -16,7 +16,7 @@
     (fn []
       ~@body)))
 
-(let [frame (JFrame.)
+(let [frame (JFrame. "Grand Theft Wumpus")
       img (ImageIcon.)
       label (JLabel. img)
       map-pane (JScrollPane. label)
@@ -24,6 +24,10 @@
       charge-check (JCheckBox. "Charge")
       option-panel (JPanel.)
       nav-panel (JPanel.)]
+  (defn pop-up-message
+    [message]
+    (JOptionPane/showMessageDialog frame message))
+
   (defn redraw
     []
     (on-evt-thread
@@ -70,6 +74,10 @@
   (defn charge?
     []
     (.isSelected charge-check))
+  (defn reset-ui
+    []
+    (.setSelected charge-check false)
+    (set-message ""))
   (defn start-ui
     []
     (doto option-panel
@@ -83,7 +91,8 @@
             BorderLayout/SOUTH)
       (.setSize 1024 768)
       (.setDefaultCloseOperation JFrame/EXIT_ON_CLOSE)
-      (.setVisible true))))
+      (.setVisible true))
+    (reset-ui)))
 
 (defn- test-click-fn
   [num]

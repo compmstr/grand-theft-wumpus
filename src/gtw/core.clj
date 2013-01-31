@@ -18,16 +18,33 @@
   [new-loc]
   (gviz/render-dot-string (game-dot-string) "/tmp/gtw.game-map.png")
   (ui/set-img "/tmp/gtw.game-map.png")
-  (ui/set-buttons (apply hash-map
-                         (apply concat
-                                (for [conn
-                                      (:connections
-                                       (city-map/id->loc game-map new-loc))]
-                                  [conn #(game-move conn)])))))
+  (let [player-visited (set (:visited @player/player))]
+    (ui/set-buttons (apply hash-map
+                           (apply concat
+                                  (for [conn
+                                        (:connections
+                                         (city-map/id->loc game-map new-loc))]
+                                    [(if (contains? player-visited conn)
+                                       (str "[" conn "]")
+                                       conn)
+                                     #(game-move conn)]))))))
+
+(defn game-end
+  [message]
+  (ui/pop-up-message message)
+  (ui/reset-ui)
+  (def game-map (city-map/generate-map))
+  (player/start-player game-map)
+  (game-display (:loc @player/player)))
+
 (defn game-move
   [new-loc]
-  (player/go-to game-map new-loc)
-  (game-display (:loc @player/player)))
+  (let [move-result (player/go-to game-map new-loc)]
+    (if (map? move-result)
+      (game-display (:loc @player/player))
+      (if move-result
+        (game-end "You beat the wumpus!, you won!")
+        (game-end "Too Bad, try again")))))
 
 (player/start-player game-map)
 (ui/start-ui)

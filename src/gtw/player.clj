@@ -28,8 +28,9 @@
   (ui/set-message "Caught by the cops!")
   nil)
 (defn handle-worm
-  [locs]
+  [locs loc]
   (ui/set-message "Found a worm gang")
+  (move-player loc) ;; so we visited the worm gang node
   (move-player-random locs))
 (defn handle-wumpus
   []
@@ -44,16 +45,25 @@
        "You run into the wumpus, and he pumps you full of lead...")
       nil)))
 
+(defn handle-bad-charge
+  []
+  (ui/set-message "You wasted your last bullet... Game over")
+  nil)
+
 (defn go-to
   "Moves player to new location. Returns either the player map, or true for win, nil for lose"
   [locs loc]
   (let [new-loc (city-map/id->loc locs loc)]
     (cond
      (:worm new-loc)
-     (handle-worm locs),
+     (handle-worm locs loc),
      (contains? (set (:cops new-loc)) (:loc @player))
      (handle-cops),
      (:wumpus new-loc)
      (handle-wumpus),
+     (ui/charge?)
+     (handle-bad-charge)
      true
-     (move-player loc))))
+     (do
+       (ui/set-message "")
+       (move-player loc)))))
