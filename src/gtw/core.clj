@@ -48,10 +48,12 @@
         (game-end "You beat the wumpus!, you won!")
         (game-end "Too Bad, try again")))))
 
-(player/start-player game-map)
-(ui/start-ui)
-(game-display (:loc @player/player))
-(.deleteOnExit (java.io.File. map-file))
+(defn -main
+  []
+  (player/start-player game-map)
+  (ui/start-ui)
+  (game-display (:loc @player/player))
+  (.deleteOnExit (java.io.File. map-file)))
 ;;(print (game-dot-string))
 ;;(ui/start-ui)
 ;;(gviz/render-dot-string (game-dot-string) map-file)
